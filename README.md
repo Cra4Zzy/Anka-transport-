@@ -1,21 +1,21 @@
-# Dinkelsbühler Tanzschule — Signature Redesign
+# ANKA TRANSPORT
 
-Modernes Redesign mit bewusst erhaltener Marken-DNA der bestehenden Tanzschule: Original-Logo, Türkis/Petrol, helle Papierflächen, organische Watercolor-Formen und eine persönliche statt sterile Bildsprache.
+Dreiseitige, buildlose Unternehmenswebsite für ANKA TRANSPORT aus Bad Kreuznach.
 
-## Dateien
-- `index.html`
-- `style.css`
-- `script.js`
-- `assets/img/logo-dinkelsbuehler-tanzschule.png`
+- `index.html`: Transportangebot, Fahrzeugauswahl, Unternehmen und Ablauf
+- `festeinsatz.html`: Fahrzeugklassen, Festeinsatz, Planung und häufige Fragen
+- `unternehmen.html`: Unternehmen, Lizenz/Versicherung, Kontakt und Anfragevorbereitung
 
-## Technisch
-- GitHub-Pages-ready
-- kein Build-Schritt
-- responsive Desktop / Tablet / Mobile
-- barriereärmere Reduced-Motion-Variante
-- Kursfilter + Schnelleinstieg
-- sticky Header beim Scrollen
-- subtiler Hero-Parallax auf Desktop
-- nahtloser Ticker
+Die Seiten werden mit `python3 build_pages.py` erzeugt. Gestaltung und Interaktionen liegen in `assets/style.css` und `assets/app.js`. Rechtstexte, Anfrageformular und Anfrageübersicht werden aus `content/` eingebunden. Alle Schriften und Bilder werden lokal geladen. Es gibt keine Laufzeitabhängigkeiten.
 
-Die übrigen Bildmotive referenzieren aktuell die bestehenden öffentlich erreichbaren Assets der Tanzschule. Für den finalen Kundengang sollten sie lokal als WebP/AVIF gespeichert und optimiert werden.
+Version 4 richtet den Auftritt klar auf Transport und LKW-Festeinsatz aus: Barlow Condensed Bold und Instrument Sans, Orange, Anthrazit und Schwarz entsprechend der vom Nutzer bereitgestellten Markenreferenz, kantige Flächen und ausschließlich Originalfotos von ANKA. Das bereitgestellte Logo ist als Originaldatei eingebunden: Emblem und Schriftzug im Header, vollständige Marke im Footer und Emblem als Favicon. Der Bildausschnitt wird über CSS beziehungsweise den SVG-ViewBox gesteuert; die Pixel der Vorlage wurden nicht verändert. Die Referenz gilt als vom Nutzer bereitgestellter, noch nicht ausdrücklich bestätigter Markenstand. Die interaktive Fahrzeugauswahl ergänzt eigene schematische LKW-Illustrationen. Die vorhandene generierte Landschaftsaufnahme und ältere Symbolbilder werden nicht mehr in die Seiten eingebunden.
+
+Die Fahrzeugklasse lässt sich per Tab-Auswahl, Tastatur oder URL-Parameter `fahrzeug` auswählen. Anfragelinks übernehmen die Auswahl in das Formular. Die Anfragevorbereitung validiert Pflichtfelder und erstellt eine kopierbare Übersicht. Sie sendet keine Daten und nutzt keinen dauerhaften Browserspeicher.
+
+Vor dem Kundenlaunch sind Telefon und E-Mail einzufügen, ein echter Kontakt-/Versandweg anzubinden und die Rechtstexte mit vollständigen Angaben zum Unternehmen und Hosting zu vervollständigen. Die Vorschau bleibt privat und enthält `noindex,nofollow`.
+
+Validierung für Version 4: JavaScript-Syntax, interne Dateien und Sprungziele, eindeutige IDs, Überschriftenstruktur, aktive Navigation, ARIA-/Dialogverweise, Alttexte, Bildintegrität, Fontreferenzen, unveränderte Logo-Datei, Logo-Ausschnittgrenzen, Textkontraste und mobile Hauptheadline mit tatsächlichen Schriftmetriken bei 320 bis 1440 Pixeln. Ein visueller Browsercheck war in dieser Umgebung nicht verfügbar und bleibt vor dem Kundenlaunch erforderlich.
+
+## Hosting
+
+Die fertigen HTML-Seiten liegen im Repository-Hauptverzeichnis und können direkt statisch gehostet werden. Ein Build-Schritt ist nicht erforderlich. Änderungen am Generator können mit `python3 build_pages.py` in die drei HTML-Seiten übernommen werden.
