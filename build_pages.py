@@ -1,12 +1,34 @@
-"""Generate the three ANKA pages. Static assets are served from dist/assets."""
+"""Generate the static ANKA website pages and illustrations."""
 from pathlib import Path
 from html import escape
+import json
 from fleet_art import write_fleet_art
 
 P = Path(__file__).parent
 D = P
 write_fleet_art(D / "assets")
 LOGO = 'assets/anka-brand-reference.png'
+LEGAL = json.loads((P / 'content/legal-details.json').read_text(encoding='utf-8'))
+PHONE = f'<a href="tel:{escape(LEGAL["phone_href"], quote=True)}">{escape(LEGAL["phone_label"])}</a>'
+EMAIL = escape(LEGAL['email'], quote=True) if LEGAL['email'] else None
+MAIL_LINK = f'<a href="mailto:{EMAIL}">{EMAIL}</a>' if EMAIL else ''
+CONTACT = f'<p>Telefon: {PHONE}' + (f'<br>E-Mail: {MAIL_LINK}' if EMAIL else '') + '</p>'
+
+def legal_page(kind):
+    is_impressum = kind == 'impressum'
+    title = 'Impressum' if is_impressum else 'Datenschutz'
+    subtitle = 'Angaben nach § 5 DDG' if is_impressum else 'Informationen zur Verarbeitung personenbezogener Daten'
+    other = '<a href="datenschutz.html">Datenschutz</a>' if is_impressum else '<a href="impressum.html">Impressum</a>'
+    content = (P / 'content' / f'{kind}.html').read_text(encoding='utf-8').replace('{{CONTACT}}', CONTACT)
+    rows = []
+    for key, label in [('register', 'Registereintrag'), ('vat_id', 'Umsatzsteuer-Identifikationsnummer'), ('business_id', 'Wirtschafts-Identifikationsnummer')]:
+        if LEGAL[key]:
+            rows.append(f'<p><strong>{label}:</strong> {escape(LEGAL[key])}</p>')
+    identifiers = '<section class="legal-block"><h2>Register und Identifikationsnummern</h2>' + ''.join(rows) + '</section>' if rows else ''
+    content = content.replace('{{IDENTIFIERS}}', identifiers)
+    notice = '<p class="legal-notice">Vorschau: Die geschäftliche E-Mail-Adresse wird vor dem Launch ergänzt.</p>' if is_impressum and not EMAIL else ''
+    return f'<header class="legal-hero"><div class="legal-wrap"><span class="kicker">ANKA TRANSPORT</span><h1>{title}</h1><p>{subtitle}</p></div></header><div class="legal-wrap legal-content"><nav class="legal-links" aria-label="Rechtliche Seiten"><a href="index.html">Startseite</a>{other}</nav>{notice}{content}</div>'
+
 NAV = [('index.html', 'Start'), ('festeinsatz.html', 'Fahrzeuge & Festeinsatz'), ('unternehmen.html', 'Unternehmen & Kontakt')]
 CLASSES = [
     ('7-5', '7,5 t', '7,5-Tonner mit Fahrer', 'Für Ihre regelmäßigen Transporte – mit Einsatzzeiten und Touren nach Vereinbarung.', 'Regelmäßige Transporte'),
@@ -28,7 +50,7 @@ def footer():
     legal = (P/'content/legal.html').read_text().replace('class="eyebrow"', 'class="kicker"')
     return '''<footer class="footer"><div class="footer-top"><a class="footer-brand" href="index.html" aria-label="ANKA TRANSPORT Startseite"><span class="brand-lockup"><img src="assets/anka-brand-reference.png" alt="" width="352" height="510" loading="lazy"></span></a><p>LKW mit Fahrer.<br>Fest in Ihre Abläufe eingeplant.</p></div>
 <div class="footer-columns"><div><span class="footer-label">Ihr Ansprechpartner</span><strong>Zafer Beyazdogan</strong><span>Inhaber · ANKA TRANSPORT</span></div><div><span class="footer-label">Unser Standort</span><address>Rheinhessenstraße 102<br>55545 Bad Kreuznach</address></div><div><span class="footer-label">Entdecken</span><a href="festeinsatz.html">Fahrzeuge & Festeinsatz</a><a href="unternehmen.html">Unternehmen & Kontakt</a></div></div>
-<div class="footer-bottom"><span>© <span data-year>2026</span> ANKA TRANSPORT</span><div><button type="button" data-dialog="impressum">Impressum</button><button type="button" data-dialog="datenschutz">Datenschutz</button><button type="button" data-dialog="bildnachweise">Bildnachweise</button></div><a href="#top">Nach oben</a></div></footer>'''+legal
+<div class="footer-bottom"><span>© <span data-year>2026</span> ANKA TRANSPORT</span><div><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><button type="button" data-dialog="bildnachweise">Bildnachweise</button></div><a href="#top">Nach oben</a></div></footer>'''+legal
 
 
 def cta():
@@ -80,19 +102,21 @@ fleet = f'''<section class="subhero fleet-hero"><div class="subhero-copy"><span 
 <section class="process-section section"><div class="section-title"><div><span class="kicker">Die Zusammenarbeit</span><h2>KLAR GEPLANT.<br>GEMEINSAM GESTARTET.</h2></div></div>{steps()}</section>
 <section class="faq section"><div><span class="kicker">Fragen zum Festeinsatz</span><h2>GUT ZU<br>WISSEN.</h2></div><div class="faq-items">{faq}</div></section>{cta()}'''
 
-form = (P/'content/request-form.html').read_text()
+form = (P/'content/request-form.html').read_text().replace('{{PHONE}}', PHONE)
 summary = (P/'content/request-summary.html').read_text()
 company = f'''<section class="subhero company-hero"><div class="subhero-copy"><span class="kicker">Unternehmen & Kontakt</span><h1>TRANSPORT.<br><span>PERSÖNLICH<br>GEFÜHRT.</span></h1><p>ANKA TRANSPORT aus Bad Kreuznach.<br>Ihr Partner für LKW mit Fahrer im Festeinsatz.</p><a class="button button-orange" href="#anfrage">Einsatz besprechen</a><div class="owner owner-light"><span class="owner-monogram" aria-hidden="true">ZB</span><div><strong>Zafer Beyazdogan</strong><span>Inhaber · ANKA TRANSPORT</span></div></div></div><div class="subhero-photo"><img src="assets/anka-front.webp" alt="Mercedes-Benz-LKW von ANKA TRANSPORT am Ladehof" width="1200" height="1600" fetchpriority="high"><span class="photo-label">BAD KREUZNACH · RHEINLAND-PFALZ</span></div></section>
 <section class="about-section section"><div><span class="kicker">Über ANKA TRANSPORT</span><h2>FESTER PARTNER.<br><span class="accent-text">DIREKTER KONTAKT.</span></h2></div><div class="about-copy"><p class="lead">Inhabergeführt von Zafer Beyazdogan. Mit Sitz in Bad Kreuznach.</p><p>Als Subunternehmer unterstützen wir Speditionen, Logistikdienstleister und Unternehmen mit LKW und Fahrer im Festeinsatz. Persönliche Zusammenarbeit und klare Vereinbarungen bilden die Grundlage.</p><p>7,5-Tonner, 12-Tonner, 18-Tonner und Sattelzüge: Welches Fahrzeug für Ihre Touren passt, stimmen wir mit Ihnen ab.</p></div></section>
 <section class="credentials section"><div class="section-title"><div><span class="kicker">Lizenz & Versicherung</span><h2>DIE GRUNDLAGE<br>FÜR UNSEREN EINSATZ.</h2></div></div><div class="credential-cards"><article><span class="credential-icon" aria-hidden="true"><svg viewBox="0 0 32 36"><path d="M6 3h13l7 7v23H6zM19 3v8h7M11 18h10M11 23h10M11 28h6"/></svg></span><div><h3>Gemeinschaftslizenz</h3><p>Für den grenzüberschreitenden gewerblichen Güterkraftverkehr liegt eine Gemeinschaftslizenz vor.</p></div></article><article><span class="credential-icon" aria-hidden="true"><svg viewBox="0 0 32 36"><path d="M16 3 28 8v10c0 7-5 12-12 15C9 30 4 25 4 18V8zM10 18l4 4 8-9"/></svg></span><div><h3>Güterschaden-Haftpflicht</h3><p>Es liegt eine Versicherungsbestätigung über eine Güterschaden-Haftpflichtversicherung gemäß § 7a GüKG vor.</p></div></article></div></section>
-<section class="contact-section section" id="anfrage"><div class="contact-intro"><span class="kicker">Anfrage vorbereiten</span><h2>IHRE TOUREN.<br><span class="accent-text">UNSER EINSATZ.</span></h2><p>Welche Fahrzeugklasse, welcher Einsatzort, welcher Start? Bereiten Sie Ihren Bedarf für die persönliche Abstimmung vor.</p><div class="contact-address"><span>Ihr Ansprechpartner</span><strong>Zafer Beyazdogan</strong><address>ANKA TRANSPORT<br>Rheinhessenstraße 102<br>55545 Bad Kreuznach</address><a class="text-link" href="https://www.google.com/maps/search/?api=1&query=Rheinhessenstra%C3%9Fe+102+55545+Bad+Kreuznach" target="_blank" rel="noopener noreferrer">Standort auf der Karte ansehen</a></div><div class="contact-service"><strong>LKW + FAHRER</strong><span>7,5 t · 12 t · 18 t · Sattelzüge</span><small>Fahrzeug und Einsatz nach persönlicher Abstimmung.</small></div></div>{form}</section>{summary}'''
+<section class="contact-section section" id="anfrage"><div class="contact-intro"><span class="kicker">Anfrage vorbereiten</span><h2>IHRE TOUREN.<br><span class="accent-text">UNSER EINSATZ.</span></h2><p>Welche Fahrzeugklasse, welcher Einsatzort, welcher Start? Bereiten Sie Ihren Bedarf für die persönliche Abstimmung vor.</p><div class="contact-address"><span>Ihr Ansprechpartner</span><strong>Zafer Beyazdogan</strong><address>ANKA TRANSPORT<br>Rheinhessenstraße 102<br>55545 Bad Kreuznach</address><div class="contact-methods">{CONTACT}</div><a class="text-link" href="https://www.google.com/maps/search/?api=1&query=Rheinhessenstra%C3%9Fe+102+55545+Bad+Kreuznach" target="_blank" rel="noopener noreferrer">Standort auf der Karte ansehen</a></div><div class="contact-service"><strong>LKW + FAHRER</strong><span>7,5 t · 12 t · 18 t · Sattelzüge</span><small>Fahrzeug und Einsatz nach persönlicher Abstimmung.</small></div></div>{form}</section>{summary}'''
 
 pages = [
  ('index.html', 'ANKA TRANSPORT — LKW mit Fahrer im Festeinsatz', 'ANKA TRANSPORT aus Bad Kreuznach unterstützt Speditionen und Unternehmen mit LKW und Fahrer im Festeinsatz. 7,5 t, 12 t, 18 t und Sattelzüge.', home),
  ('festeinsatz.html', 'Fahrzeuge & Festeinsatz — ANKA TRANSPORT', '7,5-Tonner, 12-Tonner, 18-Tonner und Sattelzüge mit Fahrer. Gemeinsam stimmen wir Fahrzeug, Touren, Einsatzzeiten und Laufzeit ab.', fleet),
  ('unternehmen.html', 'Unternehmen & Kontakt — ANKA TRANSPORT', 'Inhabergeführtes Transportunternehmen aus Bad Kreuznach. ANKA TRANSPORT und Zafer Beyazdogan: Ihr Partner für LKW mit Fahrer im Festeinsatz.', company),
+ ('impressum.html', 'Impressum — ANKA TRANSPORT', 'Anbieterinformationen für ANKA TRANSPORT aus Bad Kreuznach.', legal_page('impressum')),
+ ('datenschutz.html', 'Datenschutz — ANKA TRANSPORT', 'Datenschutzhinweise für die Website von ANKA TRANSPORT.', legal_page('datenschutz')),
 ]
 for filename, title, description, body in pages:
-    head = f'''<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ef7d14"><title>{escape(title)}</title><meta name="description" content="{escape(description, quote=True)}"><meta name="robots" content="noindex,nofollow"><meta property="og:title" content="{escape(title, quote=True)}"><meta property="og:description" content="{escape(description, quote=True)}"><meta property="og:type" content="website"><meta property="og:image" content="https://anka-transport.cra4zzy.chatgpt.site/assets/anka-truck.webp"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="assets/barlow-condensed-bold.ttf" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="assets/fonts-v3.css"><link rel="stylesheet" href="assets/style.css?v=6"><script src="assets/app.js?v=6" defer></script></head>'''
+    head = f'''<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="form-action 'none'"><meta name="theme-color" content="#ef7d14"><title>{escape(title)}</title><meta name="description" content="{escape(description, quote=True)}"><meta name="robots" content="noindex,nofollow"><meta property="og:title" content="{escape(title, quote=True)}"><meta property="og:description" content="{escape(description, quote=True)}"><meta property="og:type" content="website"><meta property="og:image" content="https://anka-transport.cra4zzy.chatgpt.site/assets/anka-truck.webp"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="assets/barlow-condensed-bold.ttf" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="assets/fonts-v3.css"><link rel="stylesheet" href="assets/style.css?v=7"><script src="assets/app.js?v=7" defer></script></head>'''
     (D/filename).write_text(head+f'<body id="top" class="{filename.split(".")[0]}-page">'+header(filename)+'<main id="main">'+body+'</main>'+footer()+'</body></html>')
-print('Generated three ANKA pages, transport design v4, supplied logo and orange/anthracite palette.')
+print(f'Generated {len(pages)} static ANKA pages.')
