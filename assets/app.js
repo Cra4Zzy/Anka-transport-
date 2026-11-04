@@ -1,12 +1,55 @@
 'use strict';
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const smoothEase = 'cubic-bezier(.22, 1, .36, 1)';
+
+function animateIn(element, {distance=10, opacity=.72, duration=480}={}) {
+ if (!element || reducedMotion.matches || typeof element.animate !== 'function') return;
+ return element.animate(
+  [{opacity, transform:`translateY(${distance}px)`}, {opacity:1, transform:'translateY(0)'}],
+  {duration, easing:smoothEase}
+ );
+}
+
+// Content is always present; motion only plays once as a section approaches the viewport.
+if (!reducedMotion.matches && 'IntersectionObserver' in window) {
+ const reveals = document.querySelectorAll([
+  '.intro-copy', '.intro-photo', '.fleet-section .section-title', '.fleet-picker',
+  '.partner-photo', '.partner-copy', '.process-section .section-title', '.steps article',
+  '.planning-copy', '.planning-photo', '.faq-items', '.about-copy', '.credential-cards article',
+  '.contact-intro', '#request-form', '.closing'
+ ].join(','));
+ const observer = new IntersectionObserver(entries => {
+  entries.forEach(({isIntersecting,target}) => {
+   if (!isIntersecting) return;
+   observer.unobserve(target);
+   animateIn(target);
+  });
+ }, {rootMargin:'0px 0px 30px 0px'});
+ reveals.forEach(element => {
+  if (element.getBoundingClientRect().top >= window.innerHeight) observer.observe(element);
+ });
+}
+
+const hero = document.querySelector('.hero-copy, .subhero-copy');
+if (hero?.getBoundingClientRect().bottom > 0 && hero.getBoundingClientRect().top < window.innerHeight) {
+ animateIn(hero, {distance:8, opacity:.86, duration:520});
+}
+document.querySelectorAll('.faq details').forEach(detail => {
+ detail.addEventListener('toggle', () => {
+  if (detail.open) animateIn(detail.querySelector('p'), {distance:4, opacity:.7, duration:260});
+ });
+});
 const menuButton = document.querySelector('.menu-toggle');
 const navigation = document.querySelector('#navigation');
 function closeMenu() { navigation.classList.remove('open'); menuButton.setAttribute('aria-expanded','false'); }
-menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')!=='true';menuButton.setAttribute('aria-expanded',String(open));navigation.classList.toggle('open',open);});
+menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')!=='true';menuButton.setAttribute('aria-expanded',String(open));navigation.classList.toggle('open',open);
+ if(open) animateIn(navigation, {distance:-6, opacity:.7, duration:230});
+});
 document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});
 document.addEventListener('click',event=>{if(!event.target.closest('.header'))closeMenu();});
 navigation.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeMenu));
-window.matchMedia('(min-width:1051px)').addEventListener('change',event=>{if(event.matches)closeMenu();});
+window.matchMedia('(min-width:1101px)').addEventListener('change',event=>{if(event.matches)closeMenu();});
 document.querySelectorAll('[data-year]').forEach(node=>node.textContent=new Date().getFullYear());
 document.querySelectorAll('[data-dialog]').forEach(button=>button.addEventListener('click',()=>document.getElementById(button.dataset.dialog).showModal()));
 document.querySelectorAll('dialog').forEach(dialog=>{dialog.querySelector('.dialog-close').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',event=>{if(event.target===dialog){const rect=dialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)dialog.close();}});});
@@ -41,8 +84,10 @@ const fleetClasses={
 document.querySelectorAll('[data-fleet-picker]').forEach(picker=>{
  const tabs=Array.from(picker.querySelectorAll('[role="tab"]'));
  const panel=picker.querySelector('[role="tabpanel"]');
- function select(tab,focus=false){
+ let switchAnimations=[];
+ function select(tab,focus=false,animate=true){
   const key=tab.dataset.fleet;const vehicle=fleetClasses[key];if(!vehicle)return;
+  const changed=panel.dataset.kind!==key;
   tabs.forEach(item=>{const active=item===tab;item.setAttribute('aria-selected',String(active));item.tabIndex=active?0:-1;});
   panel.setAttribute('aria-labelledby',tab.id);panel.dataset.kind=key;
   const weight=picker.querySelector('[data-fleet-weight]');weight.textContent=vehicle.number;
@@ -51,6 +96,13 @@ document.querySelectorAll('[data-fleet-picker]').forEach(picker=>{
   picker.querySelector('[data-fleet-description]').textContent=vehicle.description;
   picker.querySelector('[data-fleet-use]').textContent=vehicle.use;
   picker.querySelector('[data-fleet-link]').href='unternehmen.html?fahrzeug='+encodeURIComponent(key)+'#anfrage';
+  if(changed && animate){
+   switchAnimations.forEach(animation=>animation.cancel());
+   switchAnimations=[
+    animateIn(panel.querySelector('.fleet-detail'), {distance:6, opacity:.7, duration:300}),
+    animateIn(panel.querySelector(`[data-truck="${key}"]`), {distance:7, opacity:.55, duration:360})
+   ].filter(Boolean);
+  }
   if(focus)tab.focus();
  }
  tabs.forEach((tab,index)=>{
@@ -65,5 +117,5 @@ document.querySelectorAll('[data-fleet-picker]').forEach(picker=>{
    event.preventDefault();select(tabs[next],true);
   });
  });
- const initial=new URLSearchParams(location.search).get('fahrzeug')||location.hash.slice(1);const matching=tabs.find(tab=>tab.dataset.fleet===initial);if(matching)select(matching);
+ const initial=new URLSearchParams(location.search).get('fahrzeug')||location.hash.slice(1);const matching=tabs.find(tab=>tab.dataset.fleet===initial);if(matching)select(matching,false,false);
 });

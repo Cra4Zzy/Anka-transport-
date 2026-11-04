@@ -23,3 +23,113 @@
 @media(max-width:650px){:root{--gutter:24px}html{scroll-padding-top:86px}.section{padding-top:48px;padding-bottom:48px}.header{height:73px}.header nav{top:73px}.brand-icon{width:48px;height:43px}.brand-icon img{width:70px;left:-12px;top:-20px}.brand-name{width:148px;height:18px}.brand-name img{width:155px;left:-5px;top:-145px}.kicker{font-size:9px;margin-bottom:18px}h2{font-size:clamp(40px,11.1vw,58px)}h3{font-size:31px}.button{min-height:50px;font-size:12px;padding:14px 22px}.section-title{display:block;margin-bottom:28px}.section-title>p{margin-top:18px;font-size:13px;max-width:none}.section-title>p br{display:none}.hero-copy{padding:33px var(--gutter) 32px}.hero-copy .kicker{font-size:8px;margin-bottom:23px}.hero-copy h1{font-size:clamp(56px,18vw,100px);line-height:.91;margin-bottom:22px}.hero-copy>p{font-size:13px}.hero-actions{gap:18px;margin-top:24px}.hero-actions .button{font-size:11px;padding:14px 18px}.hero-link{font-size:10px}.hero-for{font-size:8px;margin-top:22px}.hero-photo{height:390px}.hero-photo>img{object-position:50% 51%}.photo-label{top:15px;right:15px;font-size:7px;padding:8px 10px}.hero-photo-note{padding:70px 24px 21px}.hero-photo-note strong{font-size:29px}.hero-photo-note>span{font-size:8px;max-width:105px}.class-strip{grid-template-columns:repeat(4,minmax(0,1fr));padding:0 14px}.class-strip>a{padding:21px 8px;gap:8px}.class-strip strong{font-size:clamp(22px,6.5vw,31px)}.class-strip span{font-size:7px;line-height:1.5;max-width:65px}.intro{grid-template-columns:1fr;gap:30px}.intro h2{font-size:clamp(40px,11.1vw,58px);margin-bottom:23px}.intro-copy>.lead{font-size:18px;max-width:none}.intro-copy>p:not(.lead){font-size:13px;max-width:none}.service-facts{margin:25px 0;gap:15px}.service-facts>div{display:grid;grid-template-columns:150px 1fr;gap:12px}.service-facts strong{font-size:12px}.service-facts span{font-size:10px;margin:0}.intro-photo{height:425px}.intro-photo figcaption{padding:18px 21px}.intro-photo figcaption span{font-size:8px}.intro-photo figcaption strong{font-size:25px}.fleet-tabs{gap:5px;margin-bottom:10px}.fleet-tabs button{min-height:54px;font-size:clamp(21px,6vw,28px);padding:10px 3px}.fleet-stage{grid-template-columns:1fr}.fleet-detail{padding:28px 25px}.fleet-weight{font-size:91px;margin-bottom:12px}.fleet-stage[data-kind=Sattelzug] .fleet-weight{font-size:71px}.fleet-detail h3{font-size:19px}.fleet-detail>p{font-size:13px;max-width:none;min-height:44px}.fleet-tags{margin:18px 0}.fleet-detail .button{font-size:12px;min-height:50px;padding:14px 21px}.fleet-visual{padding:25px 20px}.fleet-visual-label{font-size:8px;margin-bottom:6px}.truck-illustration{max-height:170px}.fleet-visual>small{font-size:8px;margin-top:0}.fleet-availability{font-size:10px;max-width:330px;margin-top:17px}.partner-section{grid-template-columns:1fr;padding:0}.partner-photo{height:380px;margin:0}.partner-photo>img{object-position:50% 48%}.partner-photo .photo-label{left:24px;bottom:19px}.partner-copy{padding:37px 24px 41px;background:var(--paper)}.partner-copy h2{font-size:48px;margin-bottom:22px}.partner-copy .kicker{font-size:9px}.partner-copy>p{font-size:13px;max-width:none}.owner{margin:16px 0 24px}.owner strong{font-size:12px}.owner div>span{font-size:9px}.partner-copy .button{font-size:12px;padding:14px 22px}.steps{grid-template-columns:1fr;gap:13px}.steps article{padding:26px 25px;display:grid;grid-template-columns:1fr 1fr;gap:16px 20px}.step-tag{grid-column:1/-1;font-size:9px;margin-bottom:0}.steps h3{font-size:32px;margin-bottom:0}.steps p{font-size:11px;max-width:none;align-self:center}.closing{grid-template-columns:1fr;gap:25px;padding-top:39px;padding-bottom:42px}.closing .kicker{font-size:9px}.closing h2{font-size:65px}.closing-action{justify-self:start;max-width:100%}.closing-action p{font-size:13px;margin-bottom:20px;max-width:350px}.subhero{grid-template-columns:1fr;min-height:0}.subhero-copy{padding:35px 24px 37px}.subhero .kicker{font-size:9px;margin-bottom:20px}.subhero h1{font-size:clamp(58px,16.3vw,85px);line-height:.95;margin-bottom:22px}.subhero-copy>p{font-size:13px;margin-bottom:23px;max-width:400px}.subhero .button{font-size:12px;padding:14px 22px}.subhero-photo{height:360px}.subhero-photo>img{object-position:50% 51%}.company-hero h1{font-size:clamp(57px,16vw,82px)}.company-hero .owner{margin-top:26px}.company-hero .subhero-photo{height:400px}.company-hero .subhero-photo>img{object-position:50% 49%}.planning-section{grid-template-columns:1fr;gap:29px}.planning-copy h2{font-size:48px;margin-bottom:21px}.planning-copy>.lead{font-size:17px;max-width:none}.planning-copy dl{gap:22px 20px;margin-top:26px}.planning-copy dt{font-size:27px;margin-bottom:6px}.planning-copy dd{font-size:11px;max-width:none}.planning-photo{height:370px}.planning-photo figcaption{padding:16px 20px;font-size:10px}.faq{grid-template-columns:1fr;gap:25px}.faq summary{font-size:12px;padding:18px 0;gap:13px}.faq details{padding:0 18px}.faq details p{font-size:12px}.faq details summary>span{font-size:23px}.about-section{grid-template-columns:1fr;gap:25px}.about-copy .lead{font-size:18px}.about-copy>p:not(.lead){font-size:13px}.credentials h2{font-size:clamp(40px,10.8vw,55px)}.credential-cards{grid-template-columns:1fr;gap:13px}.credential-cards article{display:flex;padding:24px;gap:17px}.credential-icon{width:32px;margin-bottom:0}.credential-icon svg{width:31px;height:38px}.credential-cards h3{font-size:15px;margin-bottom:9px}.credential-cards p{font-size:11px}.contact-section{grid-template-columns:1fr;gap:30px}.contact-intro h2{font-size:clamp(44px,12vw,60px);margin-bottom:21px}.contact-intro>p{font-size:13px;max-width:none}.contact-address{margin:26px 0}.contact-address>strong{font-size:33px;margin-bottom:14px}.contact-address address{font-size:12px}.contact-address .text-link{font-size:10px}.contact-service{max-width:none;padding:24px}.contact-service strong{font-size:35px}.contact-service>span{font-size:12px;margin-bottom:9px}.contact-service small{font-size:9px;max-width:none}form{padding:25px 22px}.form-heading{flex-direction:row;font-size:14px;gap:10px;margin-bottom:24px}.form-heading small{font-size:8px}.form-grid{gap:18px;margin-bottom:23px}.form-info{font-size:10px}.form-privacy{font-size:8px}.vehicle-choice{gap:6px}.vehicle-choice span{padding:10px 12px;font-size:10px}.footer{padding:40px 24px 23px}.footer-top{display:block;margin-bottom:31px}.footer-brand{display:block}.brand-lockup{width:250px;height:200px}.brand-lockup img{width:250px;top:-70px}.footer-top>p{font-size:27px;margin-top:26px;max-width:none}.footer-columns{grid-template-columns:1fr 1fr;gap:25px 20px;margin:28px 0 31px}.footer-columns>div{font-size:11px}.footer-columns>div:last-child{grid-column:1/-1}.footer-label{font-size:8px}.footer-columns>div>span:not(.footer-label){font-size:9px}.footer-bottom{display:flex;flex-direction:column;align-items:flex-start;gap:13px;font-size:8px}.footer-bottom>div{gap:20px}.info-dialog{padding:35px 25px;max-width:calc(100vw - 30px)}.info-dialog h2{font-size:43px}.info-dialog p,.info-dialog li{font-size:12px}.summary-dialog pre{font-size:10px;padding:15px}}
 @media(max-width:360px){:root{--gutter:21px}.hero-copy{padding-left:21px;padding-right:21px}.hero-copy .kicker{font-size:7px}.hero-actions{gap:15px}.hero-actions .button{font-size:10px;padding:14px 16px}.hero-link{font-size:9px}.class-strip{padding:0 8px}.class-strip>a{padding-left:7px;padding-right:7px}.class-strip strong{font-size:23px}.service-facts>div{grid-template-columns:139px 1fr;gap:8px}.service-facts strong{font-size:11px}.service-facts span{font-size:9px}.fleet-detail{padding:25px 22px}.fleet-stage[data-kind=Sattelzug] .fleet-weight{font-size:66px}.steps article{padding:23px 21px;gap:15px}.steps h3{font-size:30px}.steps p{font-size:10px}.closing h2{font-size:60px}.subhero-copy{padding-left:21px;padding-right:21px}.subhero h1{font-size:55px}.company-hero h1{font-size:53px}.contact-intro h2{font-size:43px}.form-heading{flex-direction:column;gap:5px}.vehicle-choice span{padding:9px 10px}.credential-cards article{padding:21px;gap:14px}.credential-cards h3{font-size:14px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+
+/* Softer surfaces, with the original transport layout and palette. */
+:root {
+  --radius-control: 8px;
+  --radius-card: 14px;
+  --radius-media: clamp(14px, 1.6vw, 24px);
+  --ease-anka: cubic-bezier(.22, 1, .36, 1);
+}
+.home-hero,
+.subhero {
+  background: radial-gradient(ellipse at 8% 0%, #30271f 0%, var(--ink) 63%);
+}
+.hero-photo,
+.subhero-photo {
+  margin: 18px clamp(18px, 2.4vw, 38px) 18px 0;
+  border-radius: var(--radius-media);
+  box-shadow: 0 12px 32px #070b1133;
+}
+.photo-label { border-radius: 6px; }
+.hero-photo-note { border-radius: 0 0 var(--radius-media) var(--radius-media); }
+
+.class-strip {
+  gap: 6px;
+  padding-top: 7px;
+  padding-bottom: 14px;
+}
+.class-strip > a {
+  min-width: 0;
+  border-radius: var(--radius-control);
+  background: #ffffff08;
+}
+.class-strip > a:hover { background: #ffffff12; }
+
+.intro-photo,
+.planning-photo,
+.partner-photo {
+  border-radius: var(--radius-media);
+  box-shadow: 0 10px 30px #171d2410;
+}
+.partner-section { gap: clamp(14px, 2vw, 30px); }
+.partner-copy { border-radius: var(--radius-media); }
+.fleet-stage {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: 0 12px 34px #070b1129;
+}
+.fleet-visual { background: radial-gradient(ellipse at 50% 46%, #fbfaf8 0%, #ebedef 75%); }
+.steps article,
+.credential-cards article,
+.contact-service,
+#request-form,
+.info-dialog {
+  border-radius: var(--radius-card);
+}
+.steps article,
+.credential-cards article { box-shadow: 0 5px 18px #171d240b; }
+.faq details { border-radius: 10px; }
+.faq details[open] { background: #f4eee8; }
+.owner-monogram { border-radius: var(--radius-control); }
+
+.button,
+.fleet-tabs button,
+.vehicle-choice span,
+form input:not([type=radio]),
+form textarea {
+  border-radius: var(--radius-control);
+}
+.button {
+  transition: background .22s ease, transform .32s var(--ease-anka), box-shadow .32s var(--ease-anka);
+}
+.button:hover { box-shadow: 0 5px 14px #070b1120; }
+.button:active { transform: translateY(0); }
+.fleet-tabs button[aria-selected=true] { box-shadow: inset 0 1px #ffffff3b; }
+.text-link,
+.hero-link { transition: color .2s ease, text-underline-offset .26s var(--ease-anka); }
+.text-link:hover,
+.hero-link:hover { text-underline-offset: 7px; }
+
+.closing {
+  margin: 0 var(--gutter) clamp(24px, 4vw, 56px);
+  padding-inline: clamp(24px, 4.5vw, 72px);
+  border-radius: var(--radius-media);
+  background: linear-gradient(120deg, #f3953d, var(--orange) 63%);
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .intro-photo > img,
+  .planning-photo > img,
+  .partner-photo > img { transition: transform .68s var(--ease-anka); }
+  .intro-photo:hover > img,
+  .planning-photo:hover > img,
+  .partner-photo:hover > img { transform: scale(1.025); }
+}
+
+@media (max-width: 1100px) {
+  .header nav { border-radius: 0 0 var(--radius-card) var(--radius-card); }
+}
+@media (max-width: 900px) {
+  .hero-photo { margin: 0 var(--gutter) 14px; }
+}
+@media (max-width: 650px) {
+  .hero-photo,
+  .subhero-photo { margin: 0 14px 14px; }
+  .class-strip { gap: 4px; }
+  .class-strip > a { padding-inline: 5px; }
+  .class-strip > a:last-child strong { font-size: clamp(18px, 4.9vw, 27px); }
+  .partner-section { padding: 24px 14px 14px; gap: 10px; }
+  .partner-copy { padding-inline: 10px; }
+  .closing { margin-inline: 14px; padding-inline: 24px; }
+}
