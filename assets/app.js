@@ -73,6 +73,7 @@ if(form){
   try {await navigator.clipboard.writeText(text);document.querySelector('#copy-status').textContent='Anfrage kopiert. Sie können die Übersicht jetzt einfügen.';}
   catch {const range=document.createRange();range.selectNodeContents(document.querySelector('#summary-text'));const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);document.querySelector('#copy-status').textContent='Bitte kopieren Sie den markierten Text mit Strg+C oder über das Auswahlmenü.';}
  });
+ form.querySelector('.request-controls').disabled=false;
 }
 
 const fleetClasses={
