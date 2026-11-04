@@ -1,9 +1,11 @@
 """Generate the three ANKA pages. Static assets are served from dist/assets."""
 from pathlib import Path
 from html import escape
+from fleet_art import write_fleet_art
 
 P = Path(__file__).parent
 D = P
+write_fleet_art(D / "assets")
 LOGO = 'assets/anka-brand-reference.png'
 NAV = [('index.html', 'Start'), ('festeinsatz.html', 'Fahrzeuge & Festeinsatz'), ('unternehmen.html', 'Unternehmen & Kontakt')]
 CLASSES = [
@@ -33,28 +35,23 @@ def cta():
     return '''<section class="closing section"><div><span class="kicker">Ihr nächster Festeinsatz</span><h2>WAS STEHT<br>BEI IHNEN AN?</h2></div><div class="closing-action"><p>Sprechen wir über Ihre Touren, Ihre Einsatzzeiten und das passende Fahrzeug.</p><a class="button button-dark" href="unternehmen.html#anfrage">Festeinsatz anfragen</a></div></section>'''
 
 
-def truck_svg(key):
-    # Stylised class illustrations; neither dimensions nor vehicle equipment specifications.
-    long = key == 'Sattelzug'
-    width = {'7-5': 240, '12': 290, '18': 325, 'Sattelzug': 325}[key]
-    left = 75 if long else 130
-    cabin = 415 if long else left + width + 5
-    wheel_positions = [left+50, cabin+42]
-    if key == '18': wheel_positions.insert(1, left+88)
-    if long: wheel_positions = [left+38, left+74, left+110, cabin+9, cabin+47]
-    wheels = ''.join(f'<circle cx="{x}" cy="205" r="22" fill="#151a20"/><circle cx="{x}" cy="205" r="10" fill="#c7d0d8"/><circle cx="{x}" cy="205" r="3" fill="#151a20"/>' for x in wheel_positions)
-    body = f'<rect x="{left}" y="62" width="{width}" height="119" rx="2" fill="#e5eaf0"/><rect x="{left}" y="164" width="{width}" height="17" fill="#a9bac9"/><rect x="{left+14}" y="76" width="5" height="77" fill="#c7d1db"/>'
-    if long: body += '<rect x="362" y="190" width="100" height="10" fill="#151a20"/>'
-    return f'''<svg class="truck-illustration" data-truck="{key}" viewBox="0 0 600 250" aria-hidden="true">{body}<path d="M{cabin} 103h60l31 55v41h-91z" fill="#fff"/><path d="M{cabin+10} 112h43l23 40h-66z" fill="#2b3037"/><path d="M{cabin+57} 117v35" stroke="#fff" stroke-width="4"/><rect x="{left}" y="182" width="{cabin-left+91}" height="17" fill="#292e35"/><rect x="{cabin+61}" y="166" width="26" height="8" fill="#f38a24"/>{wheels}</svg>'''
-
-
 def fleet_picker(prefix):
-    tabs = ''.join(f'<button type="button" role="tab" id="{prefix}-tab-{key}" aria-controls="{prefix}-panel" aria-selected="{str(i==0).lower()}" tabindex="{0 if i==0 else -1}" data-fleet="{key}">{short}</button>' for i, (key, short, *_rest) in enumerate(CLASSES))
-    illustrations = ''.join(truck_svg(key) for key, *_ in CLASSES)
+    tabs = ''.join(
+        f'<button type="button" role="tab" id="{prefix}-tab-{key}" aria-controls="{prefix}-panel" '
+        f'aria-selected="{str(i==0).lower()}" tabindex="{0 if i==0 else -1}" data-fleet="{key}">'
+        f'<span class="fleet-tab-index" aria-hidden="true">0{i+1}</span>'
+        f'<span class="fleet-tab-name">{short}</span></button>'
+        for i, (key, short, *_rest) in enumerate(CLASSES)
+    )
+    illustrations = ''.join(
+        f'<img class="truck-illustration" data-truck="{key}" src="assets/fleet-{key.lower()}.svg" '
+        f'width="680" height="294" decoding="async" alt="">'
+        for key, *_ in CLASSES
+    )
     return f'''<div class="fleet-picker" data-fleet-picker><div class="fleet-tabs" role="tablist" aria-label="Fahrzeugklasse auswählen">{tabs}</div>
 <div class="fleet-stage" id="{prefix}-panel" role="tabpanel" tabindex="0" aria-labelledby="{prefix}-tab-7-5" data-kind="7-5">
-<div class="fleet-detail"><span class="kicker">LKW + Fahrer</span><span class="fleet-weight" data-fleet-weight>7,5<small>t</small></span><h3 data-fleet-title>7,5-Tonner mit Fahrer</h3><p data-fleet-description>Für Ihre regelmäßigen Transporte – mit Einsatzzeiten und Touren nach Vereinbarung.</p><div class="fleet-tags"><span data-fleet-use>Regelmäßige Transporte</span><span>Mit Fahrer</span></div><a class="button button-orange" data-fleet-link href="unternehmen.html?fahrzeug=7-5#anfrage">Diesen Festeinsatz anfragen</a></div>
-<div class="fleet-visual"><span class="fleet-visual-label">FEST IN IHRE PLANUNG EINGEBUNDEN.</span>{illustrations}<small>Schematische Darstellung der Fahrzeugklasse</small><div class="fleet-availability">Fahrzeugausstattung, Verfügbarkeit und Einsatzbedingungen stimmen wir persönlich mit Ihnen ab.</div></div></div></div>'''
+<div class="fleet-detail"><span class="kicker">LKW + Fahrer</span><div class="fleet-drop fleet-weight-slot"><span class="fleet-weight" data-fleet-weight>7,5<small>t</small></span></div><h3 class="fleet-drop"><span data-fleet-title>7,5-Tonner mit Fahrer</span></h3><p class="fleet-drop"><span data-fleet-description>Für Ihre regelmäßigen Transporte – mit Einsatzzeiten und Touren nach Vereinbarung.</span></p><div class="fleet-tags"><span data-fleet-use>Regelmäßige Transporte</span><span>Mit Fahrer</span></div><a class="button button-orange" data-fleet-link href="unternehmen.html?fahrzeug=7-5#anfrage">Diesen Festeinsatz anfragen</a></div>
+<figure class="fleet-visual"><div class="fleet-visual-head"><span class="fleet-visual-label">FAHRZEUGVORSCHAU</span><span class="fleet-visual-count" aria-hidden="true"><span data-fleet-index>01</span> / 04</span></div><div class="fleet-art">{illustrations}</div><figcaption><small>Schematische Darstellung der Fahrzeugklasse</small><p class="fleet-availability">Fahrzeugausstattung, Verfügbarkeit und Einsatzbedingungen stimmen wir persönlich mit Ihnen ab.</p></figcaption></figure></div></div>'''
 
 
 def steps():
@@ -96,6 +93,6 @@ pages = [
  ('unternehmen.html', 'Unternehmen & Kontakt — ANKA TRANSPORT', 'Inhabergeführtes Transportunternehmen aus Bad Kreuznach. ANKA TRANSPORT und Zafer Beyazdogan: Ihr Partner für LKW mit Fahrer im Festeinsatz.', company),
 ]
 for filename, title, description, body in pages:
-    head = f'''<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ef7d14"><title>{escape(title)}</title><meta name="description" content="{escape(description, quote=True)}"><meta name="robots" content="noindex,nofollow"><meta property="og:title" content="{escape(title, quote=True)}"><meta property="og:description" content="{escape(description, quote=True)}"><meta property="og:type" content="website"><meta property="og:image" content="https://anka-transport.cra4zzy.chatgpt.site/assets/anka-truck.webp"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="assets/barlow-condensed-bold.ttf" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="assets/fonts-v3.css"><link rel="stylesheet" href="assets/style.css?v=5"><script src="assets/app.js?v=5" defer></script></head>'''
+    head = f'''<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ef7d14"><title>{escape(title)}</title><meta name="description" content="{escape(description, quote=True)}"><meta name="robots" content="noindex,nofollow"><meta property="og:title" content="{escape(title, quote=True)}"><meta property="og:description" content="{escape(description, quote=True)}"><meta property="og:type" content="website"><meta property="og:image" content="https://anka-transport.cra4zzy.chatgpt.site/assets/anka-truck.webp"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="assets/barlow-condensed-bold.ttf" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="assets/fonts-v3.css"><link rel="stylesheet" href="assets/style.css?v=6"><script src="assets/app.js?v=6" defer></script></head>'''
     (D/filename).write_text(head+f'<body id="top" class="{filename.split(".")[0]}-page">'+header(filename)+'<main id="main">'+body+'</main>'+footer()+'</body></html>')
 print('Generated three ANKA pages, transport design v4, supplied logo and orange/anthracite palette.')

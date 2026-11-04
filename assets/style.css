@@ -133,3 +133,143 @@ form textarea {
   .partner-copy { padding-inline: 10px; }
   .closing { margin-inline: 14px; padding-inline: 24px; }
 }
+
+/* One selection rail and a dedicated stage for the vehicle illustrations. */
+.fleet-tabs {
+  position: relative;
+  isolation: isolate;
+  gap: 4px;
+  padding: 5px;
+  margin-bottom: 12px;
+  background: #11171e;
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 #ffffff13;
+}
+.fleet-tabs::before {
+  content: "";
+  position: absolute;
+  inset-block: 5px;
+  left: 5px;
+  width: calc((100% - 22px) / 4);
+  border-radius: 8px;
+  background: linear-gradient(145deg, #ffab60, #ef7d14 76%);
+  box-shadow: inset 0 1px 0 #ffffff60, 0 3px 14px #090b10b0;
+  transform: translateX(calc(var(--active-tab, 0) * (100% + 4px)));
+  transition: transform .42s var(--ease-anka);
+  pointer-events: none;
+  opacity: 0;
+}
+.fleet-tabs.is-enhanced::before { opacity: 1; }
+.fleet-tabs button {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  min-height: 69px;
+  padding: 8px 3px;
+  background: transparent;
+  border-radius: 8px;
+}
+.fleet-tabs button:hover { background: #ffffff0d; }
+.fleet-tabs.is-enhanced button[aria-selected="true"] { background: transparent; box-shadow: none; }
+.fleet-tabs button:focus-visible { outline-offset: -3px; outline-color: #ffc794; }
+.fleet-tabs button[aria-selected="true"]:focus-visible { outline-color: #17212a; }
+.fleet-tab-index {
+  font-family: var(--body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  font-variant-numeric: tabular-nums;
+  opacity: .8;
+}
+.fleet-tab-name { font-size: clamp(22px, 2.8vw, 34px); white-space: nowrap; }
+
+.fleet-stage { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); }
+.fleet-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff 50%, #f8f5f1);
+}
+.fleet-drop { overflow: hidden; }
+.fleet-drop > span { display: block; }
+.fleet-weight-slot {
+  display: flex;
+  align-items: flex-end;
+  min-height: calc(clamp(68px, 7.1vw, 100px) + 6px);
+  margin-bottom: 6px;
+  padding: 0 4px 6px 0;
+  max-width: 100%;
+}
+.fleet-weight { margin: 0; font-size: clamp(65px, 7.05vw, 100px); }
+.fleet-stage[data-kind="Sattelzug"] .fleet-weight { font-size: clamp(49px, 5.55vw, 78px); }
+.fleet-detail > p { min-height: 50px; }
+.fleet-tags > span { border-radius: 6px; }
+
+.fleet-visual {
+  isolation: isolate;
+  padding: clamp(20px, 2.7vw, 40px) clamp(16px, 2.5vw, 37px) 23px;
+  background: radial-gradient(ellipse at 62% 55%, #47515d 0%, #2a3440 40%, #161d26 90%);
+  color: #e5e9ed;
+}
+.fleet-visual-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.fleet-visual-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: auto;
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: .13em;
+  color: #f0f2f5;
+}
+.fleet-visual-label::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffa657;
+  box-shadow: 0 0 12px #ff9b5290;
+}
+.fleet-visual-count {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: #bac2cb;
+  letter-spacing: .12em;
+  white-space: nowrap;
+}
+.fleet-visual-count > span { color: #ffb774; font-weight: 700; }
+.fleet-art {
+  width: 100%;
+  max-width: 740px;
+  aspect-ratio: 680 / 294;
+  display: grid;
+  place-items: center;
+  margin: 5px auto 6px;
+}
+.truck-illustration { width: 100%; height: auto; max-height: none; object-fit: contain; }
+.fleet-visual figcaption { width: 100%; text-align: center; }
+.fleet-visual figcaption small { display: block; font-size: 10px; color: #f0f2f5; }
+.fleet-visual .fleet-availability { margin: 6px auto 0; color: #c9cfd7; font-size: 11px; }
+
+@media (max-width: 900px) {
+  .fleet-stage { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); }
+}
+@media (max-width: 650px) {
+  .fleet-stage { grid-template-columns: 1fr; }
+  .fleet-visual { grid-row: 1; }
+  .fleet-tabs button { min-height: 60px; }
+  .fleet-tab-name { font-size: clamp(17px, 4.7vw, 27px); }
+  .fleet-detail > p { min-height: 0; }
+}

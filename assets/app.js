@@ -3,11 +3,11 @@
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const smoothEase = 'cubic-bezier(.22, 1, .36, 1)';
 
-function animateIn(element, {distance=10, opacity=.72, duration=480}={}) {
+function animateIn(element, {distance=10, opacity=.72, duration=480, delay=0}={}) {
  if (!element || reducedMotion.matches || typeof element.animate !== 'function') return;
  return element.animate(
   [{opacity, transform:`translateY(${distance}px)`}, {opacity:1, transform:'translateY(0)'}],
-  {duration, easing:smoothEase}
+  {duration, delay, easing:smoothEase, fill:delay ? 'backwards' : 'none'}
  );
 }
 
@@ -81,41 +81,76 @@ const fleetClasses={
  '18':{number:'18',unit:'t',title:'18-Tonner mit Fahrer',description:'Für Ihre laufenden Aufträge – als Ergänzung Ihrer Transportkapazitäten.',use:'Zusätzliche Kapazität'},
  'Sattelzug':{number:'Sattelzug',unit:'',title:'Sattelzüge mit Fahrer',description:'Für Transporte mit großem Platzbedarf – im langfristigen Festeinsatz.',use:'Großer Platzbedarf'}
 };
-document.querySelectorAll('[data-fleet-picker]').forEach(picker=>{
- const tabs=Array.from(picker.querySelectorAll('[role="tab"]'));
- const panel=picker.querySelector('[role="tabpanel"]');
- let switchAnimations=[];
- function select(tab,focus=false,animate=true){
-  const key=tab.dataset.fleet;const vehicle=fleetClasses[key];if(!vehicle)return;
-  const changed=panel.dataset.kind!==key;
-  tabs.forEach(item=>{const active=item===tab;item.setAttribute('aria-selected',String(active));item.tabIndex=active?0:-1;});
-  panel.setAttribute('aria-labelledby',tab.id);panel.dataset.kind=key;
-  const weight=picker.querySelector('[data-fleet-weight]');weight.textContent=vehicle.number;
-  if(vehicle.unit){const unit=document.createElement('small');unit.textContent=vehicle.unit;weight.appendChild(unit);}
-  picker.querySelector('[data-fleet-title]').textContent=vehicle.title;
-  picker.querySelector('[data-fleet-description]').textContent=vehicle.description;
-  picker.querySelector('[data-fleet-use]').textContent=vehicle.use;
-  picker.querySelector('[data-fleet-link]').href='unternehmen.html?fahrzeug='+encodeURIComponent(key)+'#anfrage';
-  if(changed && animate){
-   switchAnimations.forEach(animation=>animation.cancel());
-   switchAnimations=[
-    animateIn(panel.querySelector('.fleet-detail'), {distance:6, opacity:.7, duration:300}),
-    animateIn(panel.querySelector(`[data-truck="${key}"]`), {distance:7, opacity:.55, duration:360})
-   ].filter(Boolean);
+document.querySelectorAll('[data-fleet-picker]').forEach(picker => {
+ const rail = picker.querySelector('.fleet-tabs');
+ const tabs = [...rail.querySelectorAll('[role="tab"]')];
+ const panel = picker.querySelector('[role="tabpanel"]');
+ const weight = panel.querySelector('[data-fleet-weight]');
+ const title = panel.querySelector('[data-fleet-title]');
+ const description = panel.querySelector('[data-fleet-description]');
+ const use = panel.querySelector('[data-fleet-use]');
+ const link = panel.querySelector('[data-fleet-link]');
+ const indexLabel = panel.querySelector('[data-fleet-index]');
+ let switchAnimations = [];
+
+ function select(index, {focus=false, animate=true}={}) {
+  const tab = tabs[index];
+  const key = tab.dataset.fleet;
+  const vehicle = fleetClasses[key];
+  if (!vehicle) return;
+  const changed = panel.dataset.kind !== key;
+  tabs.forEach((item, i) => {
+   item.setAttribute('aria-selected', String(i === index));
+   item.tabIndex = i === index ? 0 : -1;
+  });
+  rail.style.setProperty('--active-tab', index);
+  panel.setAttribute('aria-labelledby', tab.id);
+  panel.dataset.kind = key;
+  indexLabel.textContent = String(index + 1).padStart(2, '0');
+  weight.textContent = vehicle.number;
+  if (vehicle.unit) {
+   const unit = document.createElement('small');
+   unit.textContent = vehicle.unit;
+   weight.appendChild(unit);
   }
-  if(focus)tab.focus();
+  title.textContent = vehicle.title;
+  description.textContent = vehicle.description;
+  use.textContent = vehicle.use;
+  link.href = 'unternehmen.html?fahrzeug=' + encodeURIComponent(key) + '#anfrage';
+
+  if (changed) {
+   switchAnimations.forEach(animation => animation.cancel());
+   switchAnimations = [];
+   if (animate && !reducedMotion.matches) {
+    switchAnimations = [weight, title, description, use].map((element, i) =>
+     animateIn(element, {distance:-12, opacity:0, duration:360, delay:i * 34})
+    ).filter(Boolean);
+    const truck = panel.querySelector(`[data-truck="${key}"]`);
+    if (typeof truck?.animate === 'function') {
+     switchAnimations.push(truck.animate([
+      {opacity:.12, transform:'translateX(16px) scale(.985)'},
+      {opacity:1, transform:'translateX(0) scale(1)'}
+     ], {duration:430, easing:smoothEase}));
+    }
+   }
+  }
+  if (focus) tab.focus();
  }
- tabs.forEach((tab,index)=>{
-  tab.addEventListener('click',()=>select(tab));
-  tab.addEventListener('keydown',event=>{
-   let next=index;
-   if(event.key==='ArrowRight')next=(index+1)%tabs.length;
-   else if(event.key==='ArrowLeft')next=(index-1+tabs.length)%tabs.length;
-   else if(event.key==='Home')next=0;
-   else if(event.key==='End')next=tabs.length-1;
+
+ const initial = new URLSearchParams(location.search).get('fahrzeug') || location.hash.slice(1);
+ select(Math.max(0, tabs.findIndex(tab => tab.dataset.fleet === initial)), {animate:false});
+ rail.classList.add('is-enhanced');
+ tabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => select(index));
+  tab.addEventListener('keydown', event => {
+   let next;
+   if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+   else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+   else if (event.key === 'Home') next = 0;
+   else if (event.key === 'End') next = tabs.length - 1;
    else return;
-   event.preventDefault();select(tabs[next],true);
+   event.preventDefault();
+   select(next, {focus:true});
   });
  });
- const initial=new URLSearchParams(location.search).get('fahrzeug')||location.hash.slice(1);const matching=tabs.find(tab=>tab.dataset.fleet===initial);if(matching)select(matching,false,false);
 });
